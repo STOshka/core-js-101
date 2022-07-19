@@ -65,8 +65,8 @@ function getStringFromTemplate(firstName, lastName) {
  *   'Hello, John Doe!' => 'John Doe'
  *   'Hello, Chuck Norris!' => 'Chuck Norris'
  */
-function extractNameFromTemplate(/* value */) {
-  throw new Error('Not implemented');
+function extractNameFromTemplate(value) {
+  return value.substring(7, value.length - 1);
 }
 
 
@@ -126,8 +126,9 @@ function repeatString(value, count) {
  *   'I like legends', 'end' => 'I like legs',
  *   'ABABAB','BA' => 'ABAB'
  */
-function removeFirstOccurrences(/* str, value */) {
-  throw new Error('Not implemented');
+function removeFirstOccurrences(str, value) {
+  const index = str.indexOf(value);
+  return str.substring(0, index) + str.substring(index + value.length);
 }
 
 /**
@@ -202,8 +203,21 @@ function extractEmails(str) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  let str = '';
+  for (let i = 0; i < height; i += 1) {
+    for (let j = 0; j < width; j += 1) {
+      if (j === 0 && i === 0) str += '┌';
+      else if (j === 0 && i === height - 1) str += '└';
+      else if (j === width - 1 && i === 0) str += '┐';
+      else if (j === width - 1 && i === height - 1) str += '┘';
+      else if (j === 0 || j === width - 1) str += '│';
+      else if (i === 0 || i === height - 1) str += '─';
+      else str += ' ';
+    }
+    str += '\n';
+  }
+  return str;
 }
 
 
@@ -223,8 +237,12 @@ function getRectangleString(/* width, height */) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  return str.split('').map((x) => {
+    if (x.toLocaleLowerCase() < 'a' || x.toLocaleLowerCase() > 'z') return x;
+    const ind = x.charCodeAt(0) > 96 ? 97 : 65;
+    return String.fromCharCode(((x.charCodeAt(0) - ind + 13) % 26) + ind);
+  }).join('');
 }
 
 /**
@@ -240,8 +258,8 @@ function encodeToRot13(/* str */) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  return typeof value === 'string' || value instanceof String;
 }
 
 
@@ -269,8 +287,10 @@ function isString(/* value */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const number = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'].indexOf(value.substring(0, value.length - 1));
+  const suit = ['♣', '♦', '♥', '♠'].indexOf(value.substring(value.length - 1));
+  return number + suit * 13;
 }
 
 

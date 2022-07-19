@@ -1,7 +1,7 @@
 /* *******************************************************************************************
  *                                                                                           *
  * Please read the following tutorial before implementing tasks:                              *
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Numbers_and_dates#Date_object
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Numbers_andnewDates#Date_object
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date     *
  *                                                                                           *
  ******************************************************************************************* */
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -53,10 +53,13 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getYear() + 1900;
+  if (year % 4) return false;
+  if (year % 100) return true;
+  if (year % 400) return false;
+  return true;
 }
-
 
 /**
  * Returns the string representation of the timespan between two dates.
@@ -73,8 +76,10 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const diff = new Date(endDate - startDate);
+  const t = (num, count) => `000${num}`.substring(3 + num.toString().length - count, 3 + num.toString().length);
+  return `${t(diff.getUTCHours(), 2)}:${t(diff.getUTCMinutes(), 2)}:${t(diff.getUTCSeconds(), 2)}.${t(diff.getUTCMilliseconds(), 3)}`;
 }
 
 
@@ -94,8 +99,13 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const newDate = date % (1000 * 60 * 60 * 24);
+  const hour = Math.floor(newDate / (1000 * 60 * 60));
+  const minutes = Math.floor(newDate / (1000 * 60)) - (hour * 60);
+  let angle = Math.abs(0.5 * (60 * (hour % 12) - 11 * minutes));
+  angle = angle > 180 ? 360 - angle : angle;
+  return (angle * Math.PI) / 180;
 }
 
 
