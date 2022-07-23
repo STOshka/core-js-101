@@ -122,10 +122,12 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  return (rect1.left < (rect2.left + rect2.width)
+   && (rect1.left + rect1.width) > rect2.left
+   && rect1.top < (rect2.top + rect2.height)
+   && (rect1.top + rect1.height) > rect2.top);
 }
-
 
 /**
  * Returns true, if point lies inside the circle, otherwise false.
@@ -170,8 +172,14 @@ function isInsideCircle(circle, point) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  const arr = [...new Set(str.split(''))];
+  for (let i = 0; i < arr.length; i += 1) {
+    if (str.indexOf(arr[i]) === str.lastIndexOf(arr[i])) {
+      return arr[i];
+    }
+  }
+  return null;
 }
 
 
@@ -403,8 +411,18 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const m1Len = m1.length;
+  const m2Len = m2[0].length;
+  const array = new Array(m1Len).fill(null).map(() => new Array(m2Len).fill(0));
+  for (let i = 0; i < m1Len; i += 1) {
+    for (let j = 0; j < m2Len; j += 1) {
+      let sum = 0;
+      for (let n = 0; n < m2.length; n += 1) sum += m1[i][n] * m2[n][j];
+      array[i][j] = sum;
+    }
+  }
+  return array;
 }
 
 
