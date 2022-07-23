@@ -63,9 +63,10 @@ function getFactorial(n) {
  *   5,10  =>  45 ( = 5+6+7+8+9+10 )
  *   -1,1  =>  0  ( = -1 + 0 + 1 )
  */
-function getSumBetweenNumbers(/* n1, n2 */) {
-  // return n1 === n2 ? 0 : (n1 + getSumBetweenNumbers(n1 + 1, n2));
-  throw new Error('Not implemented');
+function getSumBetweenNumbers(n1, n2) {
+  let sum = 0;
+  for (let i = n1; i <= n2; i += 1) sum += i;
+  return sum;
 }
 
 
@@ -196,8 +197,14 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let str = '';
+  if (isStartIncluded) str += '[';
+  else str += '(';
+  str += `${Math.min(a, b).toString()}, ${Math.max(a, b).toString()}`;
+  if (isEndIncluded) str += ']';
+  else str += ')';
+  return str;
 }
 
 
@@ -255,9 +262,20 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const str = ccn.toString();
+  const rarity = (str.length - 1) % 2;
+  const start = parseInt(str.substring(str.length - 1), 10);
+  return !(str.substring(0, str.length - 1).split('').reduce((prev, curr, index) => {
+    let newCur = parseInt(curr, 10);
+    if (index % 2 !== rarity) {
+      newCur *= 2;
+    }
+    if (newCur > 9) newCur = Math.floor(newCur / 10) + (newCur % 10);
+    return (prev + newCur) % 10;
+  }, start));
 }
+
 
 /**
  * Returns the digital root of integer:
@@ -325,8 +343,15 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  let number = num;
+  let string = '';
+  while (number >= n) {
+    string = (number % n).toString() + string;
+    number = Math.floor(number / n);
+  }
+  string = number + string;
+  return string;
 }
 
 
@@ -342,8 +367,21 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const path = pathes[0].split('/');
+
+  for (let i = path.length - 1; i > 0; i -= 1) {
+    const newPath = `${path.slice(0, i).join('/')}/`;
+    let common = true;
+    for (let j = 0; j < pathes.length; j += 1) {
+      if (pathes[j].substring(0, newPath.length) !== newPath) {
+        common = false;
+        break;
+      }
+    }
+    if (common) return `${newPath}`;
+  }
+  return '';
 }
 
 
@@ -400,8 +438,23 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const checkWinner = (pos1, pos2, pos3) => {
+    if (pos1 && pos1 === pos2 && pos2 === pos3) return pos1;
+    return undefined;
+  };
+
+  let winner = checkWinner(position[0][0], position[1][0], position[2][0]);
+  if (!winner) winner = checkWinner(position[0][1], position[1][1], position[2][1]);
+  if (!winner) winner = checkWinner(position[0][2], position[1][2], position[2][2]);
+
+  if (!winner) winner = checkWinner(position[0][0], position[0][1], position[0][2]);
+  if (!winner) winner = checkWinner(position[1][0], position[1][1], position[1][2]);
+  if (!winner) winner = checkWinner(position[2][0], position[2][1], position[2][2]);
+
+  if (!winner) winner = checkWinner(position[0][0], position[1][1], position[2][2]);
+  if (!winner) winner = checkWinner(position[2][0], position[1][1], position[0][2]);
+  return winner;
 }
 
 
